@@ -29,7 +29,6 @@ public class Cliente extends RepresentationModel<Cliente> {
     @NotNull(message = "Insira o e-mail")
     @Email(message = "Formato de e-mail inválido")
     private String email;
-    @NotNull(message = "Preencha o endereço")
     @ManyToOne
     private Endereco endereco;
 
