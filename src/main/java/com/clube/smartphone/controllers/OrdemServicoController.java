@@ -26,9 +26,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/ordens")
 public class OrdemServicoController {
 
-    private ClienteService clienteService;
-    private AparelhoService aparelhoService;
-    private OrdemServicoService ordemServicoService;
+    private final ClienteService clienteService;
+    private final AparelhoService aparelhoService;
+    private final OrdemServicoService ordemServicoService;
 
     public OrdemServicoController(ClienteService clienteService, AparelhoService aparelhoService, OrdemServicoService ordemServicoService) {
         this.clienteService = clienteService;

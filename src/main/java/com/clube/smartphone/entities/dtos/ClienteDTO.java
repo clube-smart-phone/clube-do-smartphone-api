@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 public class ClienteDTO extends RepresentationModel<ClienteDTO> {
@@ -24,12 +26,13 @@ public class ClienteDTO extends RepresentationModel<ClienteDTO> {
     private String nome;
     @NotBlank(message = "Insira o contato do cliente")
     private String telefone;
+    @NotNull(message = "Insira a data de nascimento")
+    private LocalDate dataDeNascimento;
     @NotNull
     private String cpf;
     @NotNull(message = "Insira o e-mail")
     @Email(message = "Formato de e-mail inválido")
     private String email;
-    @NotNull(message = "Preencha o endereço")
     @ManyToOne
     private Endereco endereco;
 
@@ -40,6 +43,7 @@ public class ClienteDTO extends RepresentationModel<ClienteDTO> {
         this.cpf = cliente.getCpf();
         this.email = cliente.getEmail();
         this.endereco = cliente.getEndereco();
+        this.dataDeNascimento = cliente.getDataDeNascimento();
     }
 
 }

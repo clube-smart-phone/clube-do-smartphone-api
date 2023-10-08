@@ -1,0 +1,9 @@
+{
+    "configurations": [
+        {
+            "type": "maven-run",
+            "name": "Maven-run configuration",
+            "mainClass": "com.clube.smartphone.SmartphoneApplication"
+        }
+    ]
+}
