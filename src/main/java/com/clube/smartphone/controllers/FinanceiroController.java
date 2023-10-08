@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/financeiro")
 public class FinanceiroController {
 
-    private FinanceiroService financeiroService;
+    private final FinanceiroService financeiroService;
 
     public FinanceiroController(FinanceiroService financeiroService) {
         this.financeiroService = financeiroService;

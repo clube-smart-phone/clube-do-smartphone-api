@@ -1,8 +1,6 @@
 package com.clube.smartphone.controllers;
 
-import com.clube.smartphone.entities.Cliente;
 import com.clube.smartphone.entities.dtos.ClienteDTO;
-import com.clube.smartphone.services.AparelhoService;
 import com.clube.smartphone.services.ClienteService;
 import com.clube.smartphone.services.EnderecoSerivce;
 import jakarta.validation.Valid;
@@ -12,28 +10,25 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/clientes")
+@CrossOrigin("http://localhost:5173")
 public class ClienteController {
 
-    private ClienteService serviceCliente;
-    private EnderecoSerivce serviceEndereco;
-    private AparelhoService serviceAparelho;
+    private final ClienteService serviceCliente;
+    private final EnderecoSerivce serviceEndereco;
 
-    public ClienteController(ClienteService serviceCliente, EnderecoSerivce enderecoSerivce, AparelhoService aparelhoService) {
+    public ClienteController(ClienteService serviceCliente, EnderecoSerivce enderecoSerivce) {
         this.serviceCliente = serviceCliente;
         this.serviceEndereco = enderecoSerivce;
-        this.serviceAparelho = aparelhoService;
     }
 
     @GetMapping
@@ -81,7 +76,6 @@ public class ClienteController {
         response.put("message", "Cliente cadastrado com sucesso");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
 
     }
 

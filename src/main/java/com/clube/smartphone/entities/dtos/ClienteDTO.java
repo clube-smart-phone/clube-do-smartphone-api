@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -34,7 +33,6 @@ public class ClienteDTO extends RepresentationModel<ClienteDTO> {
     @NotNull(message = "Insira o e-mail")
     @Email(message = "Formato de e-mail inválido")
     private String email;
-    @NotNull(message = "Preencha o endereço")
     @ManyToOne
     private Endereco endereco;
 
