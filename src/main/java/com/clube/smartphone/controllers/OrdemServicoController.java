@@ -41,13 +41,18 @@ public class OrdemServicoController {
 
         List<ClienteDTO> clientes = clienteService.listar();
 
-        clientes.forEach(cliente -> { cliente
+        clientes.forEach(cliente -> cliente
                 .add(linkTo(methodOn(ClienteController.class)
-                .buscarPorId(cliente.getId()))
-                .withSelfRel());
-        } );
+                        .buscarPorId(cliente.getId()))
+                        .withSelfRel()));
 
         return ResponseEntity.ok(ordemServicoService.listar());
+    }
+
+    @GetMapping("/cliente/{cpf}")
+    public ResponseEntity<List<OrdemServico>> ordemServico(@PathVariable String cpf) {
+        List<OrdemServico> ordens = ordemServicoService.ordemCliente(cpf);
+        return ResponseEntity.ok().body(ordens);
     }
 
     @PostMapping
@@ -79,10 +84,10 @@ public class OrdemServicoController {
 
     }
 
-    @GetMapping("/cliente/{cpf}")
-    public ResponseEntity<List<OrdemServico>> ordemServico(@PathVariable String cpf) {
-        List<OrdemServico> ordens = ordemServicoService.ordemCliente(cpf);
-        return ResponseEntity.ok().body(ordens);
+    @PutMapping("/finalizar/{cpf}")
+    public ResponseEntity<OrdemServico> finalizarOrdem(@PathVariable String cpf) {
+        OrdemServico ordem = ordemServicoService.finalizarOrdem(cpf);
+        return ResponseEntity.ok(ordem);
     }
 
 }

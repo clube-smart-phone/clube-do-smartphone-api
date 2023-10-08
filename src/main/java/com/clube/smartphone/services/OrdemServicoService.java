@@ -1,12 +1,9 @@
 package com.clube.smartphone.services;
 
-import com.clube.smartphone.entities.Cliente;
 import com.clube.smartphone.entities.OrdemServico;
 import com.clube.smartphone.enums.Status;
-import com.clube.smartphone.repositories.ClienteRespository;
 import com.clube.smartphone.repositories.OrdemServicoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,26 +13,25 @@ import java.util.List;
 @Service
 public class OrdemServicoService {
 
-    private ClienteRespository respository;
-    private OrdemServicoRepository ordemServicoRepository;
+    private final OrdemServicoRepository ordemServicoRepository;
 
-    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, ClienteRespository respository) {
+    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository) {
         this.ordemServicoRepository = ordemServicoRepository;
-        this.respository = respository;
     }
 
     public List<OrdemServico> listar() {
         return ordemServicoRepository.findAll();
     }
+    
+    private final LocalDateTime data = LocalDateTime.now();
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private final String dataFormatada = data.format(formatter);
 
     public OrdemServico salvar(OrdemServico ordem) {
 
-        LocalDateTime data = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        String dataFormatada = data.format(formatter);
-
         ordem.setData(dataFormatada);
         ordem.setStatus(Status.ANALISE);
+
         return ordemServicoRepository.save(ordem);
     }
 
@@ -43,13 +39,23 @@ public class OrdemServicoService {
         List<OrdemServico> ordens = ordemServicoRepository.findAll();
         List<OrdemServico> ord = new ArrayList<>();
 
-        for (OrdemServico ordem : ordens) {
-            if (ordem.getCliente().getCpf().equalsIgnoreCase(cpf)) {
-                ord.add(ordem);
+        ordens.forEach(o -> {
+            if (o.getCliente().getCpf().equalsIgnoreCase(cpf)) {
+                ord.add(o);
             }
-        }
+        });
 
         return ord;
+    }
+
+    public OrdemServico finalizarOrdem(String cpf) {
+
+        OrdemServico ordem = ordemServicoRepository.cpf(cpf);
+        ordem.setStatus(Status.FINALIZADO);
+        ordem.setData(dataFormatada);
+        ordemServicoRepository.save(ordem);
+
+        return ordem;
     }
 
 }
