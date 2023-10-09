@@ -31,26 +31,6 @@ public class ClienteController {
         this.serviceEndereco = enderecoSerivce;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ClienteDTO>> listar() {
-
-        List<ClienteDTO> cliente = serviceCliente.listar();
-
-        cliente.forEach(clienteDTO -> {
-            clienteDTO.add(linkTo(methodOn(ClienteController.class).buscarPorId(clienteDTO.getId())).withSelfRel());
-        });
-
-        return ResponseEntity.ok().body(cliente);
-
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Long id) {
-        var cliente = serviceCliente.buscarPorId(id);
-        cliente.add(linkTo(methodOn(ClienteController.class).listar()).withRel("Todos clientes"));
-        return ResponseEntity.ok(cliente);
-    }
-
     @PostMapping
     public ResponseEntity<Object> salvar(@RequestBody @Valid ClienteDTO cliente, BindingResult result) {
 
@@ -75,8 +55,28 @@ public class ClienteController {
         response.put("success", true);
         response.put("message", "Cliente cadastrado com sucesso");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ClienteDTO>> listar() {
+
+        List<ClienteDTO> cliente = serviceCliente.listar();
+
+        cliente.forEach(clienteDTO -> {
+            clienteDTO.add(linkTo(methodOn(ClienteController.class).buscarPorId(clienteDTO.getId())).withSelfRel());
+        });
+
+        return ResponseEntity.ok().body(cliente);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Long id) {
+        var cliente = serviceCliente.buscarPorId(id);
+        cliente.add(linkTo(methodOn(ClienteController.class).listar()).withRel("Todos clientes"));
+        return ResponseEntity.ok(cliente);
     }
 
 }

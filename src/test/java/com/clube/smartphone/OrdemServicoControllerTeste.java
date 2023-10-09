@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
@@ -31,24 +29,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class OrdemServicoControllerTeste {
 
     @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
     ObjectMapper objectMapper;
-
-    @Mock
-    private OrdemServicoService ordemServicoService;
 
     @InjectMocks
     private OrdemServicoController ordemServicoController;
+
+    @Mock
+    private OrdemServicoService ordemServicoService;
 
     @Mock
     private ClienteService clienteService;
@@ -57,7 +50,7 @@ public class OrdemServicoControllerTeste {
     private AparelhoService aparelhoService;
 
     @Test
-    public void CriaOrdemDeServico() throws Exception {
+    public void CriaOrdemDeServico() {
 
         Endereco endereco = new Endereco(1L, "Rua M", "Trapiche", "57010795", "Maceió");
         Cliente cliente = new Cliente(1L, "Gustavo", "981621126", "123456789", "email@email.com", LocalDate.now(), endereco);
@@ -82,13 +75,22 @@ public class OrdemServicoControllerTeste {
     }
 
     @Test
-    public void ListaTodasOrdensDeServico() throws Exception {
-        mockMvc.perform(get("/ordens"))
-                .andExpect(status().isOk());
+    public void ListaTodasOrdensDeServico() {
+
+        List<OrdemServico> ordens = ordemServicoService.listar();
+
+        when(ordemServicoService.listar()).thenReturn(ordens);
+
+        ResponseEntity<List<OrdemServico>> responseEntity = ordemServicoController.listar();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        assertEquals(ordens, responseEntity.getBody());
+
     }
 
     @Test
-    public void BuscarOrdemPorCpf() throws Exception {
+    public void BuscarOrdemPorCpf() {
 
         List<OrdemServico> ordem = Collections.singletonList(new OrdemServico());
 
@@ -125,6 +127,5 @@ public class OrdemServicoControllerTeste {
         // Verifique se a ordem retornada corresponde à ordem fictícia
         assertEquals(ordem, responseEntity.getBody());
     }
-
 
 }

@@ -18,13 +18,15 @@ public class ClienteService {
         this.respository = respository;
     }
 
-    public void salvar(ClienteDTO cliente) {
+    public ClienteDTO salvar(ClienteDTO cliente) {
 
         validaCliente(cliente);
         var clienteEntity = new Cliente();
         BeanUtils.copyProperties(cliente, clienteEntity);
 
         respository.save(clienteEntity);
+
+        return cliente;
     }
 
     public List<ClienteDTO> listar() {
