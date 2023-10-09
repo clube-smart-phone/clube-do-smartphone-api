@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +70,22 @@ public class ClienteControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         assertEquals(lista, response.getBody());
+
+    }
+
+    @Test
+    public void BuscaClientePorId() {
+
+        Endereco endereco = new Endereco(1L, "Rua M", "Trapiche", "57010795", "Maceió");
+        ClienteDTO cliente = new ClienteDTO(1L, "Gustavo", "981621126", LocalDate.now(), "123456789", "email@email.com", endereco);
+
+        when(clienteService.buscarPorId(anyLong())).thenReturn(cliente);
+
+        ResponseEntity response = clienteController.buscarPorId(anyLong());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        assertEquals(cliente, response.getBody());
 
     }
 
