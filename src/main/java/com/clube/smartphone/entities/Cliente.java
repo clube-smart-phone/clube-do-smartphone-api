@@ -36,12 +36,13 @@ public class Cliente extends RepresentationModel<Cliente> {
 
     }
 
-    public Cliente(Long id, String nome, String telefone, String cpf, String email, LocalDate dataDeNascimento) {
+    public Cliente(Long id, String nome, String telefone, String cpf, String email, LocalDate dataDeNascimento, Endereco endereco) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.cpf = cpf;
         this.email = email;
         this.dataDeNascimento = dataDeNascimento;
+        this.endereco = endereco;
     }
 }

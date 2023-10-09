@@ -6,27 +6,25 @@ import com.clube.smartphone.repositories.ClienteRespository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
 
-    private ClienteRespository respository;
+    private final ClienteRespository respository;
 
     public ClienteService(ClienteRespository respository) {
         this.respository = respository;
     }
 
-    public Cliente salvar(ClienteDTO cliente) {
+    public void salvar(ClienteDTO cliente) {
 
         validaCliente(cliente);
         var clienteEntity = new Cliente();
         BeanUtils.copyProperties(cliente, clienteEntity);
 
-        return respository.save(clienteEntity);
+        respository.save(clienteEntity);
     }
 
     public List<ClienteDTO> listar() {

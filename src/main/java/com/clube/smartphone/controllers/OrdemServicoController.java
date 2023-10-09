@@ -49,17 +49,13 @@ public class OrdemServicoController {
         return ResponseEntity.ok(ordemServicoService.listar());
     }
 
-    @GetMapping("/cliente/{cpf}")
-    public ResponseEntity<List<OrdemServico>> ordemServico(@PathVariable String cpf) {
-        List<OrdemServico> ordens = ordemServicoService.ordemCliente(cpf);
-        return ResponseEntity.ok().body(ordens);
-    }
-
     @PostMapping
     public ResponseEntity<Object> criar(@RequestBody @Valid OrdemServico ordem, BindingResult result) {
 
         Cliente cliente = clienteService.cpf(ordem.getCpf());
         ordem.setCliente(cliente);
+        ordem.setStatus(Status.ANALISE);
+
 
         if (result.hasErrors() && cliente == null) {
 
@@ -78,10 +74,15 @@ public class OrdemServicoController {
         }
 
         aparelhoService.salvar(ordem.getAparelho());
-        ordem.setStatus(Status.ANALISE);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemServicoService.salvar(ordem));
 
+    }
+
+    @GetMapping("/cliente/{cpf}")
+    public ResponseEntity<List<OrdemServico>> ordemServico(@PathVariable String cpf) {
+        List<OrdemServico> ordens = ordemServicoService.ordemCliente(cpf);
+        return ResponseEntity.ok().body(ordens);
     }
 
     @PutMapping("/finalizar/{cpf}")
