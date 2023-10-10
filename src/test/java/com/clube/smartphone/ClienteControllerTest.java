@@ -1,11 +1,11 @@
 package com.clube.smartphone;
 
 import com.clube.smartphone.controllers.ClienteController;
-import com.clube.smartphone.entities.Cliente;
 import com.clube.smartphone.entities.Endereco;
 import com.clube.smartphone.entities.dtos.ClienteDTO;
 import com.clube.smartphone.services.ClienteService;
 import com.clube.smartphone.services.EnderecoSerivce;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,13 +15,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,16 +42,21 @@ public class ClienteControllerTest {
     @Mock
     private EnderecoSerivce enderecoSerivce;
 
+    private Endereco endereco;
+    private ClienteDTO cliente;
+
+    @BeforeEach
+    public void setUp() {
+        endereco = new Endereco(1L, "Rua M", "Trapiche", "57010795", "Maceió");
+        cliente = new ClienteDTO(1L, "Gustavo", "981621126", LocalDate.now(), "123456789", "email@email.com", endereco);
+    }
+
     @Test
     public void CriarCliente() {
 
-        Endereco endereco = new Endereco(1L, "Rua M", "Trapiche", "57010795", "Maceió");
-        ClienteDTO cliente = new ClienteDTO(1L, "Gustavo", "981621126", LocalDate.now(), "123456789", "email@email.com", endereco);
-
         when(clienteService.salvar(cliente)).thenReturn(cliente);
 
-        BindingResult result = new BeanPropertyBindingResult(cliente, "ordem");
-
+        BindingResult result = new BeanPropertyBindingResult(cliente, "cliente");
         ResponseEntity responseEntity = clienteController.salvar(cliente, result);
 
         verify(clienteService).salvar(cliente);

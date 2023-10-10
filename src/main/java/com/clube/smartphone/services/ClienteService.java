@@ -2,6 +2,8 @@ package com.clube.smartphone.services;
 
 import com.clube.smartphone.entities.Cliente;
 import com.clube.smartphone.entities.dtos.ClienteDTO;
+import com.clube.smartphone.exceptions.ClienteExceptions.ClienteNaoEncontrado;
+import com.clube.smartphone.exceptions.ClienteExceptions.ListaClientesVazia;
 import com.clube.smartphone.repositories.ClienteRespository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -30,12 +32,23 @@ public class ClienteService {
     }
 
     public List<ClienteDTO> listar() {
+
+        if(respository.findAll().isEmpty()) {
+            throw new ListaClientesVazia("Nenhum cliente cadastrado");
+        }
+
         return respository.findAll().stream().map(ClienteDTO::new).collect(Collectors.toList());
     }
 
     public ClienteDTO buscarPorId(Long id) {
-        var cliente = respository.findById(id).map(ClienteDTO::new).get();
-        return cliente;
+
+        var cliente = respository.findById(id).map(ClienteDTO::new);
+
+        if(cliente.isEmpty()) {
+            throw new ClienteNaoEncontrado("Cliente não encontrado");
+        }
+
+        return cliente.get();
     }
 
     public void remover(Long id) {
